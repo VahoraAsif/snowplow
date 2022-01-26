@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Gazetteer">
+  <meta name="keywords" content="Leaflet, Api">
+  <meta name="author" content="Mahhamadaasif Vahora">
+
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="libs/css/leaflet.css" crossorigin="">
+
+  <!-- Bootstrap CSS -->
+  <link href="libs/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+  <!-- EasyButton CSS -->
+  <link rel="stylesheet" href="libs/css/easyButton.css">
+
+  <!-- My CSS -->
+  <link rel="stylesheet" href="libs/css/index.css">
+
+  <!--ExtraMarkers CSS-->
+  <link rel="stylesheet" href="libs/css/leaflet.extra-markers.min.css">
+
+  <!--FontAwesome Js-->
+  <script src="https://kit.fontawesome.com/263f475487.js" crossorigin="anonymous"></script>
+
+ 
+
+ 
+
+
+  <title>Gazetteer</title>
+  <link rel="shortcut icon" type="icon" href="libs/images/Gazetterr.ico" />
+</head>
+
+<body>
+  <!--Preloader-->
+  <div id="preloader"></div>
+  <div class="container">
+    <div id="nav">
+      <select id="chooseCountry"></select>
+    </div>
+   
+  </div>
+
+  <div class="modal fade" id="modalCountry" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class='modal-content custom'>
+
+        <div class="modal-header bg-dark">
+          <span id="countryFlag"></span>
+          <h3 class='modal-title mx-auto fw-bold text-danger' id='countryName'></h3>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class='modal-body'>
+
+          <div class='container flex' id='countryInfoMain'>
+            <div class='row'>
+            
+              <div class='col fw-bold'>Summary:</div>
+              <p class=" text-center" id='countrySummary'></p>
+            </div>
+            <div class='row'>
+              <div class='col fw-bold'>Capital:</div>
+              <div class='col text-end' id='countryCapital'></div>
+            </div>
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Continent:</div>
+              <div class='col text-end' id='countryRegion'></div>
+            </div>
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Area:</div>
+              <div class='col text-end' id='countryArea'></div>
+            </div>
+
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Population:</div>
+              <div class='col text-end' id='countryPopulation'></div>
+            </div>
+
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Language(s):</div>
+              <div class='col text-end' id='countryLanguages'></div>
+            </div>
+
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Currency:</div>
+              <div class='col text-end' id='countryCurrency'></div>
+            </div>
+            <hr>
+            <div class='row'>
+              <div class='col fw-bold'>Wikipedia:</div>
+              <div class='col text-end' id='countryWiki'><a href="" target="_blank" id="countryWikiLink">Wikipedia
+                  Link</a></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weather Modal -->
+  <div class="modal fade" id="modalWeather" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark">
+          <h5 class="modal-title text-light" id="staticBackdropLabel">Weather Forecast</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="image">
+          <div class="d-flex justify-content-between flex-row bd-highlight mb-3">
+            <h2 class="mt-4" id="weather-date"></h2><br>
+            <p> <span class="mb-5 ml-3" id="icon"></span><span id="temp"></span><br><span id="type"></span></p>
+          </div>
+          <div class="d-flex justify-content-around">
+            <h6 id="feels_like"></h6>
+            <h6 id="temp_min"></h6>
+            <h6 id="temp_max"></h6>
+          </div>
+        </div>
+        
+        <div class="d-flex justify-content-around">
+          <div class="p-2 flex-shrink-1 bd-highlight">
+            <h6 id="weather-day1"></h6>
+            <h6 class="text-center" id="temp1"></h6>
+          </div>
+          <div class="p-2 flex-shrink-1 bd-highlight">
+            <h6 id="weather-day2"></h6>
+            <h6 class="text-center" id="temp2"></h6>
+          </div>
+          <div class="p-2 flex-shrink-1 bd-highlight">
+            <h6 id="weather-day3"></h6>
+            <h6 class="text-center" id="temp3"></h6>
+          </div>
+          <div class="p-2 flex-shrink-1 bd-highlight">
+            <h6 id="weather-day4"></h6>
+            <h6 class="text-center" id="temp4"></h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Covid Modal -->
+  <div class="modal fade" id="modalCovid" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class='modal-content custom'>
+
+        <div class="modal-header bg-dark">
+          <h5 class='modal-title text-light'>Covid Update in</h5>
+          <h3 class='modal-title fw-bold mx-2 text-danger' id='name'></h3>
+          <h6 class='small mt-3 text-light'>Updated on &nbsp;</h6>
+          <h6 class='small mt-3 text-light' id='updateOn'></h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class='modal-body'>
+
+          <div class='container flex'>
+            <div class='row'>
+              <div class='col fw-bold'>New Death(s)</div>
+              <div class='col text-end' id='todayDeath'></div>
+            </div>
+            <div class='row mt-2'>
+              <div class='col fw-bold'>New Confirmed</div>
+              <div class='col text-end' id='todayConfirm'></div>
+            </div>
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Total Deaths</div>
+              <div class='col text-end' id='deaths'></div>
+            </div>
+
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Total Confirmed Cases</div>
+              <div class='col text-end' id='confirm'></div>
+            </div>
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Total Recovered Cases</div>
+              <div class='col text-end' id='recover'></div>
+            </div>
+
+            <div class='row mt-2'>
+              <div class='col fw-bold'>Total Critical Cases</div>
+              <div class='col text-end' id='critical'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Holiday Modal-->
+  <div class="modal fade" id="modalHoliday" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class='modal-content custom'>
+
+        <div class="modal-header bg-dark">
+          <h5 class='modal-title text-light'>Holidays in</h5>
+          <h3 class='modal-title fw-bold mx-2 text-danger' id='holidayTitle'></h3>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class='modal-body'>
+          <table class='table table-warning table-striped' id='holidayTable'>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--CityMarkers-->
+  <div id="modalCityMarker" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class='modal-content custom'>
+
+        <div class="modal-header custom-header bg-dark">
+          <h3 class='fw-bold mx-2 text-danger' id='cityName'></h3>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class='modal-body'>
+          <div class='container flex' id='cityInfoMain'>
+
+            <div class='row'>
+              <div class='col fw-bold'>Type:</div>
+              <div class='col text-end' id='featureType'></div>
+            </div>
+            <div class='row'>
+              <div class='col fw-bold'>Population:</div>
+              <div class='col text-end' id='cityPopulation'></div>
+            </div>
+
+
+            <div class='row'>
+              <div class='col fw-bold'>Summary:</div>
+              <div class='col text-end' id='citySummary'></div>
+            </div>
+            <hr>
+            <div class='row'>
+              <div class='col fw-bold'>Wikipedia:</div>
+              <div class='col text-end' id='cityWiki'><a href="" target="_blank" id="cityWikiLink">Wikipedia Link</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Map -->
+  <div id=map></div>
+  
+  
+  <!-- JavaScripts -->
+  <script src="libs/js/leaflet.js" crossorigin=""></script>
+  <script src="libs/js/jquery-2.2.3.min.js"></script>
+  <script src="libs/js/easyButton.js"></script>
+  <script src="libs/js/leaflet.extra-markers.min.js"></script>
+  <script src="libs/js/script.js"></script>
+  <script src="libs/js/bootstrap.js" crossorigin="anonymous"></script>
+  <script src="libs/js/numeral.js"></script>
+
+  <script type="text/javascript" src="libs/js/sp-custom.js" async=1></script>
+  <script type="text/javascript" src="libs/js/fetchData.js" async=1></script>
+</body>
+</html>
